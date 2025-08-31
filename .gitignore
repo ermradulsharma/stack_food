@@ -1,0 +1,45 @@
+# Laravel & PHP
+/vendor
+/node_modules
+.env
+.env.backup
+.phpunit.result.cache
+error_log
+storage/*.key
+
+# Laravel specific
+/public/hot
+/public/storage
+
+# Debug & Logs
+npm-debug.log
+yarn-error.log
+*.log
+
+# OS / IDE Files
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+
+# Docker / Vagrant
+docker-compose.override.yml
+Homestead.json
+Homestead.yaml
+
+# Composer / NPM
+composer.lock
+package-lock.json
+
+# Cache
+*.cache
+
+# Archives / Backups
+*.zip
+*.tar.gz
+*.rar
+
+# Custom
+*.bak
+*.tmp
