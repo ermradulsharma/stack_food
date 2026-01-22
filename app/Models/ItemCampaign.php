@@ -21,13 +21,18 @@ class ItemCampaign extends Model
         'restaurant_id' => 'integer',
         'category_id' => 'integer',
         'veg' => 'integer',
+        'category_ids' => 'array',
+        'variations' => 'array',
+        'add_ons' => 'array',
+        'attributes' => 'array',
+        'choice_options' => 'array',
     ];
 
     public function translations()
     {
         return $this->morphMany(Translation::class, 'translationable');
     }
-    
+
     public function restaurant()
     {
         return $this->belongsTo(Restaurant::class);
@@ -42,7 +47,7 @@ class ItemCampaign extends Model
     {
         return $query->where('status', '=', 1);
     }
-    
+
     public function scopeRunning($query)
     {
         return $query->whereDate('end_date', '>=', date('Y-m-d'));

@@ -1,74 +1,91 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400"></a></p>
+# StackFood - Multi-Restaurant Delivery System
 
-<p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+![Banner](https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg)
 
-## About Laravel
+## 🚀 Overview
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+**StackFood** is a complete multi-restaurant food delivery system developed using the Laravel framework. It provides a robust solution for managing a food delivery business with separate portals for Administrators, Restaurant Owners, Customers, and Delivery Personnel.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+From a centralized admin panel to intuitive mobile applications, StackFood streamlines the entire food ordering and delivery lifecycle.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+---
 
-## Learning Laravel
+## ✨ Key Features
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+### 🛠 Admin Panel
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 1500 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+- **Dashboard:** Comprehensive overview of business performance, earnings, and order stats.
+- **Zone Management:** Define specific delivery areas using Google Maps.
+- **Restaurant Management:** Onboard, monitor, and manage restaurant partners.
+- **Order Management:** Track orders from placement to delivery in real-time.
+- **Cuisine & Category Management:** Flexible categorization of food items.
+- **Campaigns & Coupons:** Powerful marketing tools for promotions.
+- **Wallet & Loyalty Points:** Manage customer incentives and store credits.
+- **Push Notifications:** Send targeted alerts via Firebase.
 
-## Laravel Sponsors
+### 🍱 Restaurant Portal
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+- **Menu Management:** Control products, variations, and add-ons.
+- **Order Processing:** Accept, prepare, and hand over orders to delivery men.
+- **Earnings & Withdrawals:** Track revenue and request payouts.
+- **Restaurant Settings:** Manage opening hours, schedules, and profile info.
 
-### Premium Partners
+### 📱 Customer Features
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
+- **Intuitive UI:** Easy food discovery and ordering experience.
+- **Real-time Tracking:** Monitor order status and delivery man location.
+- **Multi-Payment:** Integrated with over 10+ payment gateways (Stripe, PayPal, Razorpay, etc.).
+- **Wallet System:** Add funds and pay using wallet balance.
+- **Loyalty Points:** Earn points on orders and convert them to wallet balance.
+- **Wishlist:** Save favorite restaurants and food items.
 
-## Contributing
+### 🚴 Delivery Man Features
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+- **Order Dashboard:** View latest and current delivery tasks.
+- **Location Tracking:** Record location data for real-time tracking.
+- **Earnings History:** Detailed log of completed deliveries and earnings.
+- **Profile Management:** Update status and personal information.
 
-## Code of Conduct
+---
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+## 🛠 Tech Stack
 
-## Security Vulnerabilities
+- **Backend:** [Laravel 8](https://laravel.com/) (PHP)
+- **Database:** MySQL (with Spatial extensions for mapping)
+- **API:** RESTful API with Passport Authentication
+- **Maps:** Google Maps API (Autocomplete, Distance, Geocoding)
+- **Notifications:** Firebase Cloud Messaging (FCM)
+- **Payments:** Stripe, PayPal, Razorpay, Paystack, Flutterwave, and more.
+- **Image Processing:** Intervention Image
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+---
 
-## License
+## 📂 Project Structure
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+StackFood follows a modular approach for business logic:
 
+- `app/CentralLogics`: Contains the core business logic used across different portals.
+- `app/Http/Controllers/Api`: API endpoints for the mobile applications.
+- `app/Http/Controllers/Admin`: Backend logic for the administration panel.
+- `app/Http/Controllers/Vendor`: Backend logic for the restaurant portal.
+- `database/migrations`: Database schema definitions.
 
-## Design changed:
-    #theme.minc619.css-> removed:
-        .page-header{
-            border-bottom:.0625rem solid #e7eaf3;
-            margin-bottom:2.25rem
-        }
-    #vendoe.min.css-> =  
-        .select2-container--default .select2-selection--single{
-            background-color:#fff;display: block;width: 100%;height: calc(1.6em + 1.21875rem);padding: .54688rem .875rem;font-size: .875rem;font-weight: 400;line-height: 1.6;color: #1e2022;background-color: #fff;background-clip: padding-box;border: .0625rem solid #e7eaf3;border-radius: .3125rem;transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
-            }
+---
+
+## 📥 Installation
+
+Please refer to [INSTALLATION.md](file:///d:/github/Laravel%20Project/houseofdelivery/INSTALLATION.md) for detailed setup instructions.
+
+## 🏗 Architecture
+
+Detailed architectural overview can be found in [ARCHITECTURE.md](file:///d:/github/Laravel%20Project/houseofdelivery/ARCHITECTURE.md).
+
+---
+
+## 🤝 Contributing
+
+We welcome contributions! Please see [CONTRIBUTING.md](file:///d:/github/Laravel%20Project/houseofdelivery/CONTRIBUTING.md) for details.
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](file:///d:/github/Laravel%20Project/houseofdelivery/LICENSE) file for details.

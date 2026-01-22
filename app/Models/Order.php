@@ -11,6 +11,18 @@ class Order extends Model
 {
     use HasFactory;
 
+    public const STATUS_PENDING = 'pending';
+    public const STATUS_CONFIRMED = 'confirmed';
+    public const STATUS_PROCESSING = 'processing';
+    public const STATUS_HANDOVER = 'handover';
+    public const STATUS_PICKED_UP = 'picked_up';
+    public const STATUS_DELIVERED = 'delivered';
+    public const STATUS_CANCELED = 'canceled';
+    public const STATUS_FAILED = 'failed';
+    public const STATUS_REFUND_REQUESTED = 'refund_requested';
+    public const STATUS_REFUNDED = 'refunded';
+    public const STATUS_ACCEPTED = 'accepted';
+
     protected $casts = [
         'order_amount' => 'float',
         'coupon_discount_amount' => 'float',
@@ -19,7 +31,7 @@ class Order extends Model
         'delivery_address_id' => 'integer',
         'delivery_man_id' => 'integer',
         'delivery_charge' => 'float',
-        'original_delivery_charge'=>'float',
+        'original_delivery_charge' => 'float',
         'user_id' => 'integer',
         'scheduled' => 'integer',
         'restaurant_id' => 'integer',
@@ -27,7 +39,7 @@ class Order extends Model
         'processing_time' => 'integer',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
-        'dm_tips'=>'float'
+        'dm_tips' => 'float'
     ];
 
     public function setDeliveryChargeAttribute($value)
@@ -78,59 +90,59 @@ class Order extends Model
 
     public function scopeAccepteByDeliveryman($query)
     {
-        return $query->where('order_status', 'accepted');
+        return $query->where('order_status', self::STATUS_ACCEPTED);
     }
 
     public function scopePreparing($query)
     {
-        return $query->whereIn('order_status', ['confirmed','processing','handover']);
+        return $query->whereIn('order_status', [self::STATUS_CONFIRMED, self::STATUS_PROCESSING, self::STATUS_HANDOVER]);
     }
 
 
     //check from here
     public function scopeOngoing($query)
     {
-        return $query->whereIn('order_status', ['accepted','confirmed','processing','handover','picked_up']);
+        return $query->whereIn('order_status', [self::STATUS_ACCEPTED, self::STATUS_CONFIRMED, self::STATUS_PROCESSING, self::STATUS_HANDOVER, self::STATUS_PICKED_UP]);
     }
 
     public function scopeFoodOnTheWay($query)
     {
-        return $query->where('order_status','picked_up');
+        return $query->where('order_status', self::STATUS_PICKED_UP);
     }
 
     public function scopePending($query)
     {
-        return $query->where('order_status','pending');
+        return $query->where('order_status', self::STATUS_PENDING);
     }
 
     public function scopeFailed($query)
     {
-        return $query->where('order_status','failed');
+        return $query->where('order_status', self::STATUS_FAILED);
     }
 
     public function scopeCanceled($query)
     {
-        return $query->where('order_status','canceled');
+        return $query->where('order_status', self::STATUS_CANCELED);
     }
 
     public function scopeDelivered($query)
     {
-        return $query->where('order_status','delivered');
+        return $query->where('order_status', self::STATUS_DELIVERED);
     }
 
     public function scopeRefunded($query)
     {
-        return $query->where('order_status','refunded');
+        return $query->where('order_status', self::STATUS_REFUNDED);
     }
 
     public function scopeSearchingForDeliveryman($query)
     {
-        return $query->whereNull('delivery_man_id')->where('order_type', '=' , 'delivery')->whereNotIn('order_status',['delivered','failed','canceled', 'refund_requested', 'refunded']);
+        return $query->whereNull('delivery_man_id')->where('order_type', '=', 'delivery')->whereNotIn('order_status', [self::STATUS_DELIVERED, self::STATUS_FAILED, self::STATUS_CANCELED, self::STATUS_REFUND_REQUESTED, self::STATUS_REFUNDED]);
     }
 
     public function scopeDelivery($query)
     {
-        return $query->where('order_type', '=' , 'delivery');
+        return $query->where('order_type', '=', 'delivery');
     }
 
     public function scopeScheduled($query)
@@ -140,27 +152,26 @@ class Order extends Model
 
     public function scopeOrderScheduledIn($query, $interval)
     {
-        return $query->where(function($query)use($interval){
-            $query->whereRaw('created_at <> schedule_at')->where(function($q) use ($interval) {
-            $q->whereBetween('schedule_at', [Carbon::now()->toDateTimeString(),Carbon::now()->addMinutes($interval)->toDateTimeString()]);
-            })->orWhere('schedule_at','<',Carbon::now()->toDateTimeString());
+        return $query->where(function ($query) use ($interval) {
+            $query->whereRaw('created_at <> schedule_at')->where(function ($q) use ($interval) {
+                $q->whereBetween('schedule_at', [Carbon::now()->toDateTimeString(), Carbon::now()->addMinutes($interval)->toDateTimeString()]);
+            })->orWhere('schedule_at', '<', Carbon::now()->toDateTimeString());
         })->orWhereRaw('created_at = schedule_at');
-
     }
 
     public function scopePos($query)
     {
-        return $query->where('order_type', '=' , 'pos');
+        return $query->where('order_type', '=', 'pos');
     }
 
     public function scopeNotpos($query)
     {
-        return $query->where('order_type', '<>' , 'pos');
+        return $query->where('order_type', '<>', 'pos');
     }
 
     public function getCreatedAtAttribute($value)
     {
-        return date('Y-m-d H:i:s',strtotime($value));
+        return date('Y-m-d H:i:s', strtotime($value));
     }
 
     protected static function booted()

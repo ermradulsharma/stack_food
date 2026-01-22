@@ -25,7 +25,12 @@ class Food extends Model
         'reviews_count' => 'integer',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
-        'veg' => 'integer'
+        'veg' => 'integer',
+        'category_ids' => 'array',
+        'choice_options' => 'array',
+        'add_ons' => 'array',
+        'attributes' => 'array',
+        'variations' => 'array',
     ];
 
 
@@ -77,8 +82,7 @@ class Food extends Model
 
     public function getCategoryAttribute()
     {
-        $category = Category::find(json_decode($this->category_ids)[0]->id);
-        return $category ? $category->name : trans('messages.uncategorize');
+        return $this->category ? $this->category->name : trans('messages.uncategorize');
     }
 
     protected static function booted()
