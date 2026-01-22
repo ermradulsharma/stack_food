@@ -2,63 +2,36 @@
 
 namespace App\Http\Controllers;
 
-use App\CentralLogics\Helpers;
 use App\Models\Order;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use Razorpay\Api\Api;
+use App\Services\Payment\PaymentService;
 
 class RazorPayController extends Controller
 {
+    protected $paymentService;
+
+    public function __construct(PaymentService $paymentService)
+    {
+        $this->paymentService = $paymentService;
+    }
+
     public function payWithRazorpay()
     {
-        return view('razor-pay');
+        $data = []; // Add any necessary data if needed by the view
+        return $this->paymentService->getGateway('razor_pay')->initialize($data);
     }
 
     public function payment(Request $request, $order_id)
     {
-        $order = Order::where(['id' => $order_id])->first();
-        //get API Configuration
-        $api = new Api(config('razor.razor_key'), config('razor.razor_secret'));
-        //Fetch payment information by razorpay_payment_id
-        $payment = $api->payment->fetch($request['razorpay_payment_id']);
+        // Service expects request. We might need to ensure order_id is accessible if not in request.
+        // The original code used $request['razorpay_payment_id'] which contained the transaction ref.
+        // The order_id was passed as a route param.
+        // But logic inside relied on $api->payment->fetch()->description to find order id or fallback?
+        // Let's pass the request as is. If verify needs the route param order_id, we should merge it.
+        // In the service implementation I wrote, I mainly looked at razorpay_payment_id.
+        // Let's merge order_id into request to be safe if we change service logic later.
+        $request->merge(['order_id' => $order_id]);
 
-        if (count($request->all()) && !empty($request['razorpay_payment_id'])) {
-            try {
-                // $response = $api->payment->fetch($request['razorpay_payment_id'])->capture(array('amount' => $payment['amount']));
-                $order = Order::where(['id' => $payment->description])->first();
-                $tr_ref = $request['razorpay_payment_id'];
-
-                $order->transaction_reference = $tr_ref;
-                $order->payment_method = 'razor_pay';
-                $order->payment_status = 'paid';
-                $order->order_status = 'confirmed';
-                $order->confirmed = now();
-                $order->save();
-                Helpers::send_order_notification($order);
-            } catch (\Exception $e) {
-                info($e);
-                Order::
-                where('id', $order)
-                ->update([
-                    'payment_method' => 'razor_pay',
-                    'order_status' => 'failed',
-                    'failed'=>now(),
-                    'updated_at' => now(),
-                ]);
-                if ($order->callback != null) {
-                    return redirect($order->callback . '&status=fail');
-                }else{
-                    return \redirect()->route('payment-fail');
-                }
-            }
-        }
-
-        if ($order->callback != null) {
-            return redirect($order->callback . '&status=success');
-        }else{
-            return \redirect()->route('payment-success');
-        }
+        return $this->paymentService->getGateway('razor_pay')->verify($request);
     }
-
 }

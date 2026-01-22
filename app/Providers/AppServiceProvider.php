@@ -1,7 +1,9 @@
 <?php
 
 namespace App\Providers;
+
 ini_set('memory_limit', '-1');
+
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Pagination\Paginator;
 use App\CentralLogics\Helpers;
@@ -26,18 +28,12 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
 
-        try
-        {
+        try {
             Paginator::useBootstrap();
-            foreach(Helpers::get_view_keys() as $key=>$value)
-            {
+            foreach (Helpers::get_view_keys() as $key => $value) {
                 view()->share($key, $value);
             }
+        } catch (\Throwable $e) {
         }
-        catch(\Exception $e)
-        {
-
-        }
-
     }
 }

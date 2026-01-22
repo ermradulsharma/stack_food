@@ -4,9 +4,9 @@
 
 ## 🚀 Overview
 
-**StackFood** is a complete multi-restaurant food delivery system developed using the Laravel framework. It provides a robust solution for managing a food delivery business with separate portals for Administrators, Restaurant Owners, Customers, and Delivery Personnel.
+**StackFood** is a complete, enterprise-grade multi-restaurant food delivery system built on the powerful **Laravel** framework. Designed to scale, it offers a seamless ecosystem for various stakeholders including Administrators, Restaurant Owners, Customers, and Delivery Personnel.
 
-From a centralized admin panel to intuitive mobile applications, StackFood streamlines the entire food ordering and delivery lifecycle.
+Whether you are starting a hyper-local food delivery service or a city-wide marketplace, StackFood provides the tools to manage orders, dispatch deliveries, and track earnings efficiently.
 
 ---
 
@@ -14,78 +14,94 @@ From a centralized admin panel to intuitive mobile applications, StackFood strea
 
 ### 🛠 Admin Panel
 
-- **Dashboard:** Comprehensive overview of business performance, earnings, and order stats.
-- **Zone Management:** Define specific delivery areas using Google Maps.
-- **Restaurant Management:** Onboard, monitor, and manage restaurant partners.
-- **Order Management:** Track orders from placement to delivery in real-time.
-- **Cuisine & Category Management:** Flexible categorization of food items.
-- **Campaigns & Coupons:** Powerful marketing tools for promotions.
-- **Wallet & Loyalty Points:** Manage customer incentives and store credits.
-- **Push Notifications:** Send targeted alerts via Firebase.
+The command center of your operations.
+
+- **Dashboard:** Real-time business analytics, earning reports, and order statistics.
+- **Zone Management:** Draw precise delivery zones on Google Maps to manage coverage.
+- **Restaurant Management:** Onboard partners, manage menus, and monitor performance.
+- **Campaigns & Coupons:** Create targeted promotions to boost sales.
+- **Dispatch Management:** Assign orders to delivery men manually or automatically.
 
 ### 🍱 Restaurant Portal
 
-- **Menu Management:** Control products, variations, and add-ons.
-- **Order Processing:** Accept, prepare, and hand over orders to delivery men.
-- **Earnings & Withdrawals:** Track revenue and request payouts.
-- **Restaurant Settings:** Manage opening hours, schedules, and profile info.
+Empowering restaurant partners.
 
-### 📱 Customer Features
+- **Menu Management:** Create categories, add-ons, and product variations.
+- **Order Processing:** Accept, prepare, and handover orders seamlessly.
+- **Business Insights:** Track daily sales, payouts, and customer reviews.
+- **Scheduling:** Manage restaurant opening and closing times.
 
-- **Intuitive UI:** Easy food discovery and ordering experience.
-- **Real-time Tracking:** Monitor order status and delivery man location.
-- **Multi-Payment:** Integrated with over 10+ payment gateways (Stripe, PayPal, Razorpay, etc.).
-- **Wallet System:** Add funds and pay using wallet balance.
-- **Loyalty Points:** Earn points on orders and convert them to wallet balance.
-- **Wishlist:** Save favorite restaurants and food items.
+### 📱 Customer App & Web
 
-### 🚴 Delivery Man Features
+A premium experience for end-users.
 
-- **Order Dashboard:** View latest and current delivery tasks.
-- **Location Tracking:** Record location data for real-time tracking.
-- **Earnings History:** Detailed log of completed deliveries and earnings.
-- **Profile Management:** Update status and personal information.
+- **User-Friendly UI:** Modern, responsive design for easy navigation.
+- **Smart Search:** Find food by cuisine, restaurant, or dietary preference.
+- **Real-Time Tracking:** Live order tracking from preparation to delivery.
+- **Loyalty Program:** Earn points on every order and redeem them for discounts.
+- **Multi-Gateway Support:** Secure payments via major global and local gateways.
+
+### 🚴 Delivery Man App
+
+Efficient logistics management.
+
+- **Task Management:** Receive instant order requests and delivery details.
+- **Route Optimization:** Integrated maps for the fastest delivery routes.
+- **Earnings Tracker:** View delivery history and collected cash.
+
+---
+
+## 💳 Supported Payment Gateways
+
+StackFood integrates with a wide range of payment providers to ensure smooth transactions globally:
+
+- **Global:** Stripe, PayPal
+- **Asia & Middle East:** Razorpay, Paystack, Flutterwave, **SslCommerz**, **SenangPay**, **Paymob**, **Paytabs**, **Bkash**, **Paytm**
+- **Europe & CIS:** **LiqPay**
+- **Latin America:** MercadoPago
+
+_Note: Credentials for these gateways can be configured directly in the `.env` file._
 
 ---
 
 ## 🛠 Tech Stack
 
-- **Backend:** [Laravel 8](https://laravel.com/) (PHP)
-- **Database:** MySQL (with Spatial extensions for mapping)
-- **API:** RESTful API with Passport Authentication
-- **Maps:** Google Maps API (Autocomplete, Distance, Geocoding)
-- **Notifications:** Firebase Cloud Messaging (FCM)
-- **Payments:** Stripe, PayPal, Razorpay, Paystack, Flutterwave, and more.
-- **Image Processing:** Intervention Image
+- **Backend:** [Laravel 8+](https://laravel.com/) (PHP)
+- **Database:** PostgreSQL / MySQL (Spatial Extensions enabled)
+- **Authentication:** Laravel Passport (OAuth2)
+- **Real-Time:** Firebase Cloud Messaging (FCM) & Pusher
+- **Maps:** Google Maps API (Geocoding, Places, Directions)
+- **Storage:** Local or AWS S3
 
 ---
 
 ## 📂 Project Structure
 
-StackFood follows a modular approach for business logic:
+This project follows a modular and clean architecture:
 
-- `app/CentralLogics`: Contains the core business logic used across different portals.
-- `app/Http/Controllers/Api`: API endpoints for the mobile applications.
-- `app/Http/Controllers/Admin`: Backend logic for the administration panel.
-- `app/Http/Controllers/Vendor`: Backend logic for the restaurant portal.
-- `database/migrations`: Database schema definitions.
+- `app/Services`: Domain-specific business logic (e.g., Payment Gateways).
+- `app/CentralLogics`: Core helper functions and shared logic.
+- `app/Http/Controllers/Api`: API endpoints for mobile apps.
+- `app/Http/Controllers/Admin`: Logic for the Admin Dashboard.
+- `app/Http/Controllers/Vendor`: Logic for the Restaurant Portal.
+- `config`: Configuration files for services and third-party integrations.
 
 ---
 
 ## 📥 Installation
 
-Please refer to [INSTALLATION.md](file:///d:/github/Laravel%20Project/houseofdelivery/INSTALLATION.md) for detailed setup instructions.
+For detailed setup instructions, including server requirements and deployment steps, please refer to [INSTALLATION.md](INSTALLATION.md).
 
 ## 🏗 Architecture
 
-Detailed architectural overview can be found in [ARCHITECTURE.md](file:///d:/github/Laravel%20Project/houseofdelivery/ARCHITECTURE.md).
+To understand the system design and data flow, check out [ARCHITECTURE.md](ARCHITECTURE.md).
 
 ---
 
 ## 🤝 Contributing
 
-We welcome contributions! Please see [CONTRIBUTING.md](file:///d:/github/Laravel%20Project/houseofdelivery/CONTRIBUTING.md) for details.
+We welcome contributions from the community! Please read our [CONTRIBUTING.md](CONTRIBUTING.md) guide to get started.
 
 ## 📄 License
 
-This project is licensed under the MIT License - see the [LICENSE](file:///d:/github/Laravel%20Project/houseofdelivery/LICENSE) file for details.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.

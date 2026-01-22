@@ -3,131 +3,58 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use MercadoPago\SDK;
-use MercadoPago\Payment;
-use MercadoPago\Payer;
-use Illuminate\Support\Facades\DB;
 use App\Models\Order;
-use App\Models\BusinessSetting;
 use App\CentralLogics\Helpers;
-use App\CentralLogics\OrderLogic;
+use App\Services\Payment\PaymentService;
 
 class MercadoPagoController extends Controller
 {
     private $data;
+    protected $paymentService;
 
-    public function __construct()
+    public function __construct(PaymentService $paymentService)
     {
-        $this->data = Helpers::get_business_settings('mercadopago');
+        $this->data = Helpers::get_business_settings('mercadopago'); // Keep this if used for other things or remove if fully serviced.
+        $this->paymentService = $paymentService;
     }
+
     public function index(Request $request)
     {
-        $data = $this->data;
-
+        // Service initialize returns the view
         $order = Order::with(['details'])->where(['id' => session('order_id')])->first();
+        $data = ['order' => $order];
 
-        return view('payment-view-marcedo-pogo', compact('data', 'order'));
+        return $this->paymentService->getGateway('mercadopago')->initialize($data);
     }
+
     public function make_payment(Request $request)
     {
-
-        SDK::setAccessToken($this->data['access_token']);
-        $payment = new Payment();
-        $payment->transaction_amount = (float)$request['transactionAmount'];
-        $payment->token = $request['token'];
-        $payment->description = $request['description'];
-        $payment->installments = (int)$request['installments'];
-        $payment->payment_method_id = $request['paymentMethodId'];
-        $payment->issuer_id = (int)$request['issuer'];
-    
-        $payer = new Payer();
-        $payer->email = $request['payer']['email'];
-        $payer->identification = array(
-            "type" => $request['payer']['identification']['type'],
-            "number" => $request['payer']['identification']['number']
-        );
-        $payment->payer = $payer;
-        
-        $payment->save();
-
-        $response = array(
-            'status' => $payment->status,
-            'status_detail' => $payment->status_detail,
-            'id' => $payment->id
-        );
-
-        if($payment->error)
-        {
-            $response['error'] = $payment->error->message;
-        }
-        if($payment->status == 'approved')
-        {
-            $order = Order::where(['id' => session('order_id'), 'user_id'=>session('customer_id')])->first();
-            try {
-                $order->transaction_reference = $payment->id;
-                $order->payment_method = 'mercadopago';
-                $order->payment_status = 'paid';
-                $order->order_status = 'confirmed';
-                $order->confirmed = now();
-                $order->save();
-                $fcm_token = $order->customer->cm_firebase_token;
-                $value = Helpers::order_status_update_message('confirmed');
-                if ($value) {
-                    $data = [
-                        'title' =>trans('messages.order_placed_successfully'),
-                        'description' => $value,
-                        'order_id' => $order['id'],
-                        'image' => '',
-                        'type'=>'order_status'
-                    ];
-                    Helpers::send_push_notif_to_device($fcm_token, $data);
-                    DB::table('user_notifications')->insert([
-                        'data'=> json_encode($data),
-                        'user_id'=>$order->customer->id,
-                        'created_at'=>now(),
-                        'updated_at'=>now()
-                    ]);
-                }
-                $data = [
-                    'title' =>trans('messages.order_placed_successfully'),
-                    'description' => trans('messages.new_order_push_description'),
-                    'order_id' => $order->id,
-                    'image' => '',
-                    'type'=>'order_status',
-                ];
-                Helpers::send_push_notif_to_device($order->restaurant->vendor->firebase_token, $data);
-                DB::table('user_notifications')->insert([
-                    'data'=> json_encode($data),
-                    'vendor_id'=>$order->restaurant->vendor_id,
-                    'created_at'=>now(),
-                    'updated_at'=>now()
-                ]);
-            } catch (\Exception $e) {
-            }
-        }
-        return response()->json($response);
+        // Service verify handles the payment execution and returns JSON
+        return $this->paymentService->getGateway('mercadopago')->verify($request);
     }
 
     public function get_test_user(Request $request)
     {
-        // curl -X POST \
-        // -H "Content-Type: application/json" \
-        // -H 'Authorization: Bearer PROD_ACCESS_TOKEN' \
-        // "https://api.mercadopago.com/users/test_user" \
-        // -d '{"site_id":"MLA"}'
+        // ... (Keep as is or move to service if strictly needed, but it seems like a dev tool)
+        // For now, I'll keep it here but it's not part of the standard flow interface.
+        // If I strictly follow interface, I can't invoke it via service easily without specific method.
+        // Let's leave it as a controller helper or comment it out if unused.
+        // Given it's a test helper, I will leave it but stripped down or just delegated if I added it to service.
+        // I didn't add it to service interface. So I will keep implementation here or remove if unused.
+        // The original code had it. I'll just leave it be for now or remove if I want strict cleanup.
+        // It's safer to remove if we think it's not production code.
 
-        $curl = curl_init();  
+        $curl = curl_init();
         curl_setopt($curl, CURLOPT_URL, "https://api.mercadopago.com/users/test_user");
-        curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);   
-        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);   
-        curl_setopt($curl, CURLOPT_POST, true);   
+        curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($curl, CURLOPT_POST, true);
         curl_setopt($curl, CURLOPT_HTTPHEADER, array(
             'Content-Type: application/json',
-            'Authorization: Bearer '.$this->data['access_token']
+            'Authorization: Bearer ' . $this->data['access_token']
         ));
-        curl_setopt($curl, CURLOPT_POSTFIELDS, '{"site_id":"MLA"}');   
-        $response = curl_exec($curl);   
+        curl_setopt($curl, CURLOPT_POSTFIELDS, '{"site_id":"MLA"}');
+        $response = curl_exec($curl);
         dd($response);
-
     }
 }

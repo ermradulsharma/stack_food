@@ -37,7 +37,7 @@ class ConfigServiceProvider extends ServiceProvider
             $emailServices = json_decode($data['value'], true);
             if ($emailServices) {
                 $config = array(
-                    'status' => (Boolean)(isset($emailServices['status'])?$emailServices['status']:1),
+                    'status' => (bool)(isset($emailServices['status']) ? $emailServices['status'] : 1),
                     'driver' => $emailServices['driver'],
                     'host' => $emailServices['host'],
                     'port' => $emailServices['port'],
@@ -185,45 +185,42 @@ class ConfigServiceProvider extends ServiceProvider
             $timeformat = BusinessSetting::where(['key' => 'timeformat'])->first();
             if ($timeformat && $timeformat->value == '12') {
                 Config::set('timeformat', 'h:i:a');
-            }
-            else{
+            } else {
                 Config::set('timeformat', 'H:i');
             }
 
             $canceled_by_restaurant = BusinessSetting::where(['key' => 'canceled_by_restaurant'])->first();
             if ($canceled_by_restaurant) {
-                Config::set('canceled_by_restaurant', (boolean)$canceled_by_restaurant->value);
+                Config::set('canceled_by_restaurant', (bool)$canceled_by_restaurant->value);
             }
 
             $canceled_by_deliveryman = BusinessSetting::where(['key' => 'canceled_by_deliveryman'])->first();
             if ($canceled_by_deliveryman) {
-                Config::set('canceled_by_deliveryman', (boolean)$canceled_by_deliveryman->value);
+                Config::set('canceled_by_deliveryman', (bool)$canceled_by_deliveryman->value);
             }
 
-            $toggle_veg_non_veg = (boolean)BusinessSetting::where(['key' => 'toggle_veg_non_veg'])->first()->value;
-            if($toggle_veg_non_veg)
-            {
-                Config::set('toggle_veg_non_veg', $toggle_veg_non_veg);
-            }
-            else{
+            $toggle_veg_non_veg = BusinessSetting::where(['key' => 'toggle_veg_non_veg'])->first();
+            if ($toggle_veg_non_veg) {
+                Config::set('toggle_veg_non_veg', (bool)$toggle_veg_non_veg->value);
+            } else {
                 Config::set('toggle_veg_non_veg', false);
             }
 
             //paytm
             $paytm = BusinessSetting::where(['key' => 'paytm'])->first();
-            $paytm = isset($paytm)?json_decode($paytm->value, true):null;
+            $paytm = isset($paytm) ? json_decode($paytm->value, true) : null;
 
             if (isset($paytm)) {
 
-                $PAYTM_STATUS_QUERY_NEW_URL='https://securegw-stage.paytm.in/merchant-status/getTxnStatus';
-                $PAYTM_TXN_URL='https://securegw-stage.paytm.in/theia/processTransaction';
+                $PAYTM_STATUS_QUERY_NEW_URL = 'https://securegw-stage.paytm.in/merchant-status/getTxnStatus';
+                $PAYTM_TXN_URL = 'https://securegw-stage.paytm.in/theia/processTransaction';
                 if ($mode == 'live') {
-                    $PAYTM_STATUS_QUERY_NEW_URL='https://securegw.paytm.in/merchant-status/getTxnStatus';
-                    $PAYTM_TXN_URL='https://securegw.paytm.in/theia/processTransaction';
+                    $PAYTM_STATUS_QUERY_NEW_URL = 'https://securegw.paytm.in/merchant-status/getTxnStatus';
+                    $PAYTM_TXN_URL = 'https://securegw.paytm.in/theia/processTransaction';
                 }
 
                 $config = array(
-                    'PAYTM_ENVIRONMENT' => ($mode=='live')?'PROD':'TEST',
+                    'PAYTM_ENVIRONMENT' => ($mode == 'live') ? 'PROD' : 'TEST',
                     'PAYTM_MERCHANT_KEY' => env('PAYTM_MERCHANT_KEY', $paytm['paytm_merchant_key']),
                     'PAYTM_MERCHANT_MID' => env('PAYTM_MERCHANT_MID', $paytm['paytm_merchant_mid']),
                     'PAYTM_MERCHANT_WEBSITE' => env('PAYTM_MERCHANT_WEBSITE', $paytm['paytm_merchant_website']),
@@ -235,9 +232,7 @@ class ConfigServiceProvider extends ServiceProvider
 
                 Config::set('config_paytm', $config);
             }
-
-        } catch (\Exception $ex) {
-
+        } catch (\Throwable $ex) {
         }
     }
 }

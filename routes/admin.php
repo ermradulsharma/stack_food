@@ -32,7 +32,6 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
             Route::post('order', 'DashboardController@order')->name('order');
             Route::post('zone', 'DashboardController@zone')->name('zone');
             Route::post('user-overview', 'DashboardController@user_overview')->name('user-overview');
-            Route::post('business-overview', 'DashboardController@business_overview')->name('business-overview');
         });
 
         Route::group(['prefix' => 'custom-role', 'as' => 'custom-role.', 'middleware' => ['module:custom_role']], function () {
@@ -197,7 +196,6 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
                 Route::get('edit/{id}', 'CategoryController@edit')->name('edit');
                 Route::post('update/{id}', 'CategoryController@update')->name('update');
                 Route::get('update-priority/{category}', 'CategoryController@update_priority')->name('priority');
-                Route::post('store', 'CategoryController@store')->name('store');
                 Route::get('status/{id}/{status}', 'CategoryController@status')->name('status');
                 Route::delete('delete/{id}', 'CategoryController@delete')->name('delete');
                 Route::post('search', 'CategoryController@search')->name('search');

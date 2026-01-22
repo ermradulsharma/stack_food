@@ -34,11 +34,7 @@ Route::get('contact-us', [HomeController::class, 'contact_us'])->name('contact-u
 Route::get('privacy-policy', [HomeController::class, 'privacy_policy'])->name('privacy-policy');
 Route::post('newsletter/subscribe', [NewsletterController::class, 'newsLetterSubscribe'])->name('newsletter.subscribe');
 
-Route::get('authentication-failed', function () {
-    return response()->json([
-        'errors' => [['code' => 'auth-001', 'message' => 'Unauthenticated.']],
-    ], 401);
-})->name('authentication-failed');
+Route::get('authentication-failed', [HomeController::class, 'authentication_failed'])->name('authentication-failed');
 
 /* Payment routes */
 Route::group(['prefix' => 'payment-mobile'], function () {
@@ -80,7 +76,7 @@ Route::get('/paymob-callback', [PaymobController::class, 'callback'])->name('pay
 // Paystack
 Route::post('/paystack-pay', [PaystackController::class, 'redirectToGateway'])->name('paystack-pay');
 Route::get('/paystack-callback', [PaystackController::class, 'handleGatewayCallback'])->name('paystack-callback');
-Route::get('/paystack', fn() => view('paystack'));
+Route::view('/paystack', 'paystack');
 
 // Flutterwave
 Route::post('/flutterwave-pay', [FlutterwaveController::class, 'initialize'])->name('flutterwave_pay');
@@ -115,14 +111,7 @@ Route::any('liqpay-callback', [LiqPayController::class, 'callback'])->name('liqp
 // Wallet Payment
 Route::get('wallet-payment', [WalletPaymentController::class, 'make_payment'])->name('wallet.payment');
 
-// Test Routes
-Route::get('/test', fn() => dd('Hello tester'));
 
-Route::get('authentication-failed', fn() => response()->json([
-    'errors' => [['code' => 'auth-001', 'message' => 'Unauthorized.']]
-], 401))->name('authentication-failed');
-
-Route::get('module-test', fn() => null);
 
 // Restaurant Registration
 Route::group(['prefix' => 'restaurant', 'as' => 'restaurant.'], function () {
